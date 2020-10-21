@@ -15,4 +15,4 @@ The function `sift` is responsible for computing the keypoint locations and thei
 
 
 ### **References**
-- D.G. Lowe, "Distinctive Image Features", International Journal of Computer Vision, 2004
+- D.G. Lowe, "Distinctive Image Featuresfrom Scale-Invariant Keypoints", International Journal of Computer Vision, 2004
