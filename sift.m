@@ -5,8 +5,8 @@ function [PoIs, FinalDescs] = sift(orgImg)
 % input:     An gray-scale image in fomrat of double scaled between 0-to-1
 % output:    Keypoints locations, and descriptor
 %
-% Ref: D.G. Lowe, "Distinctive Image Features", International Journal of 
-%   Computer Vision, 2004
+% Ref: D.G. Lowe, "Distinctive Image Features from Scale-Invariant Keypoints",
+%   International Journal of Computer Vision, 2004
 %
 % This code has been developed for educational purposes at IASBS
 %% INITIALIZATIONS
@@ -116,7 +116,9 @@ for o=1:NUM_OF_OCTAVES %for each octave
                             if(floor(x+DescRadius)>currW); highX = currW;else highX=floor(x+DescRadius); end
                             
                             % extracting the surrounding 16-by-16 window
-                            weights = fspecial('gaussian',[highY-lowY+1, highX-lowX+1], 1.5);
+                            % Gaussian weighting function with ? equal to 
+                            %  one half the width of the descriptor window 
+                            weights = fspecial('gaussian',[highY-lowY+1, highX-lowX+1], 8);
                             wsubM = M(lowY:highY, lowX:highX) .* weights;
                             subO = O(lowY:highY, lowX:highX);
                             
@@ -132,6 +134,11 @@ for o=1:NUM_OF_OCTAVES %for each octave
                             
                             %concatinate hists of sections to obtain a vector of length 128
                             desc = reshape(permute(patchesDescs,[3,2,1]),[1,128]);
+                            
+                            % feature vector modi?cation (page 16 of ref.)
+                            desc = normr(desc);
+                            desc(desc > 0.2) = 0.2; % threshold the maximum value as 0.2
+                            desc = normr(desc);
                             
                             % keep the descs and keypoint attributes in the
                             % final output
